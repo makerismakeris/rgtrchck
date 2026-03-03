@@ -1,0 +1,16 @@
+{
+  "name": "regitra-daily-check",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Daily Regitra vehicle status checker via GitHub Actions",
+  "main": "src/checkRegitra.js",
+  "scripts": {
+    "check": "node src/checkRegitra.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "playwright": "^1.52.0"
+  }
+}
