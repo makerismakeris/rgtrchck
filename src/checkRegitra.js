@@ -206,15 +206,18 @@ function extractStatus(text, labelVariants) {
 }
 
 async function detectCaptchaLike(page) {
-  const content = (await page.content()).toLowerCase();
-  return (
-    content.includes('captcha') ||
-    content.includes('i am human') ||
-    content.includes('human visitor') ||
-    content.includes('automated spam submission') ||
-    content.includes('esu ne robotas') ||
-    content.includes('aš ne robotas')
-  );
+  // If the normal search form is present, this is not the anti-bot page.
+  const hasNormalForm = (await page.locator('#registrationNo, #plateNo, button:has-text("IEŠKOTI"), button:has-text("Ieškoti")').count()) > 0;
+  if (hasNormalForm) return false;
+
+  // Regitra challenge page has dedicated controls/text (answer box + submit + support ID text).
+  const hasChallengeControls = (await page.locator('#ans, #jar, #captcha_audio').count()) > 0;
+  const bodyText = (await page.innerText('body').catch(() => '')).toLowerCase();
+  const hasChallengeText =
+    (bodyText.includes('human visitor') && bodyText.includes('automated spam submission')) ||
+    bodyText.includes('your support id is');
+
+  return hasChallengeControls || hasChallengeText;
 }
 
 async function maybeWaitForManualChallengeSolve(page, stage) {
