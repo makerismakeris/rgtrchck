@@ -29,18 +29,7 @@ jobs:
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
 
-      - name: Ensure run happens at 07:00 Europe/Vilnius
-        id: run_window
-        run: |
-          hour=$(TZ='Europe/Vilnius' date +%H)
-          if [ "$hour" = "07" ]; then
-            echo "should_run=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "should_run=false" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Run checker
-        if: steps.run_window.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch'
         env:
           REGITRA_PLATE_NUMBER: ${{ secrets.REGITRA_PLATE_NUMBER }}
           REGITRA_REG_CERT_NUMBER: ${{ secrets.REGITRA_REG_CERT_NUMBER }}
@@ -58,7 +47,6 @@ jobs:
           if-no-files-found: ignore
 
       - name: Add summary
-        if: steps.run_window.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           if [ -f artifacts/result.json ]; then
             node -e "const fs=require('fs'); const r=JSON.parse(fs.readFileSync('artifacts/result.json','utf8')); const s=r.statuses || {}; const out = [
@@ -96,18 +84,7 @@ jobs:
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
 
-      - name: Ensure run happens at 07:00 Europe/Vilnius
-        id: run_window
-        run: |
-          hour=$(TZ='Europe/Vilnius' date +%H)
-          if [ "$hour" = "07" ]; then
-            echo "should_run=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "should_run=false" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Run checker
-        if: steps.run_window.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch'
         env:
           REGITRA_PLATE_NUMBER: ${{ secrets.REGITRA_PLATE_NUMBER }}
           REGITRA_REG_CERT_NUMBER: ${{ secrets.REGITRA_REG_CERT_NUMBER }}
@@ -125,7 +102,6 @@ jobs:
           if-no-files-found: ignore
 
       - name: Add summary
-        if: steps.run_window.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           if [ -f artifacts/result.json ]; then
             node -e "const fs=require('fs'); const r=JSON.parse(fs.readFileSync('artifacts/result.json','utf8')); const s=r.statuses || {}; const out = [
