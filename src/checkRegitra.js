@@ -464,8 +464,8 @@ async function runAttempt(attemptNumber) {
     await page.screenshot({ path: SCREENSHOT_PATH, fullPage: true });
 
     const unresolved = Object.values(result.statuses).filter((v) => v === 'NERASTA').length;
-    if (unresolved >= 2) {
-      throw new Error('Result parsed, but key status fields were not found. Verify selectors/parsing against current page layout.');
+    if (unresolved === 3) {
+      throw new Error('All key status fields were not found. Verify selectors/parsing against current page layout.');
     }
 
     return result;
